@@ -1,4 +1,4 @@
-// ── Cân Điện Tử Đại Tín — tư vấn & báo giá (frontend, giao diện Messenger) ──
+// ── Tổng Kho Cân Lê Huy — tư vấn & báo giá (frontend, giao diện Messenger) ──
 (() => {
   const $ = (s) => document.querySelector(s);
   const chat = $('#chat');
@@ -59,7 +59,7 @@
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   }
   function pageAvatar() {
-    return el('div', 'avatar', '<span class="mono mono-xs">ĐT</span>');
+    return el('div', 'avatar', '<span class="mono mono-xs">LH</span>');
   }
 
   function addMsg(role, contentNode) {
@@ -394,7 +394,7 @@
   renderChips();
   addMsg(
     'bot',
-    'Dạ em chào anh/chị, đây là **Cân Điện Tử Đại Tín** — bên em nhập khẩu & phân phối các loại cân điện tử **giá xuất xưởng**.\n' +
+    'Dạ em chào anh/chị, đây là **Tổng Kho Cân Lê Huy** — bên em nhập khẩu & phân phối các loại cân điện tử **giá xuất xưởng**.\n' +
       'Anh/chị cần cân loại nào ạ (cân tính tiền, cân bàn, cân sàn, cân treo, cân tiểu ly, cân heo, cân ô tô...)? ' +
       'Anh/chị mô tả nhu cầu hoặc **gửi ảnh chiếc cân** để em tư vấn và báo giá ngay.'
   );

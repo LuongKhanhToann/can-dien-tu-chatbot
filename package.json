@@ -3,5 +3,5 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Cân Điện Tử Đại Tín — chatbot tư vấn & báo giá cân điện tử (frontend tĩnh kiểu Facebook + serverless API trên Vercel, Google Gemini 2.5 Flash)"
+  "description": "Tổng Kho Cân Lê Huy — chatbot tư vấn & báo giá cân điện tử (frontend tĩnh kiểu Facebook + serverless API trên Vercel, Google Gemini 2.5 Flash)"
 }

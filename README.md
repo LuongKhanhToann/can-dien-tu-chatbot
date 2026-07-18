@@ -1,4 +1,4 @@
-# Cân Điện Tử Đại Tín — Chatbot tư vấn & báo giá
+# Tổng Kho Cân Lê Huy — Chatbot tư vấn & báo giá
 
 Chatbot bán hàng kiểu **fanpage Facebook / Messenger** cho doanh nghiệp **nhập khẩu & phân phối cân điện tử giá xuất xưởng**. Khách nhắn tin hoặc **gửi ảnh chiếc cân** để được tư vấn đúng loại và báo giá ngay.
 

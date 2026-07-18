@@ -10,7 +10,7 @@ import { identifyScale, CONFIDENCE_MIN } from './vision.js';
 import { notifyAdmin } from './notify.js';
 
 export const SHOP = {
-  name: 'Cân Điện Tử Đại Tín',
+  name: 'Tổng Kho Cân Lê Huy',
   tagline: 'Nhập khẩu & phân phối cân điện tử — Giá xuất xưởng',
   hotline: '1800 6789',
   zalo: '0909 168 246',
@@ -171,7 +171,7 @@ export function getProductDetails({ product_id }) {
 export function createQuote({ product_id, quantity = 1, customer_name, phone, note }) {
   const p = findProduct(product_id);
   if (!p) return { error: 'Không tìm thấy sản phẩm để báo giá.' };
-  const code = 'DT' + Math.random().toString(36).slice(2, 6).toUpperCase() + Math.floor(Math.random() * 90 + 10);
+  const code = 'LH' + Math.random().toString(36).slice(2, 6).toUpperCase() + Math.floor(Math.random() * 90 + 10);
 
   // Sản phẩm cần khảo sát (cân ô tô) — không có giá niêm yết.
   if (p.price == null) {
