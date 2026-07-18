@@ -1,0 +1,7 @@
+{
+  "name": "can-dien-tu-chatbot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Cân Điện Tử Đại Tín — chatbot tư vấn & báo giá cân điện tử (frontend tĩnh kiểu Facebook + serverless API trên Vercel, gpt-4o-mini)"
+}

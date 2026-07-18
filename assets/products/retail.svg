@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Cân tính giá bán hàng">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eaf1ff"/><stop offset="1" stop-color="#dbe7ff"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f7fb"/><stop offset="1" stop-color="#c9d3e0"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3b8bff"/><stop offset="1" stop-color="#0866ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <ellipse cx="200" cy="252" rx="150" ry="20" fill="#0a3f8f" opacity="0.10"/>
+  
+  <rect x="96" y="150" width="208" height="70" rx="8" fill="url(#metal)" stroke="#a9b6c8"/>
+  <rect x="150" y="120" width="120" height="34" rx="4" fill="#1c2b46"/>
+  <rect x="158" y="126" width="30" height="22" rx="4" fill="#0d1830"/>
+    <text x="173" y="143" text-anchor="middle" font-family="Consolas, monospace" font-size="12.100000000000001" font-weight="700" fill="#7CFC5A">2.0</text>
+  <rect x="196" y="126" width="30" height="22" rx="4" fill="#0d1830"/>
+    <text x="211" y="143" text-anchor="middle" font-family="Consolas, monospace" font-size="12.100000000000001" font-weight="700" fill="#5AD7FC">35</text>
+  <rect x="234" y="126" width="30" height="22" rx="4" fill="#0d1830"/>
+    <text x="249" y="143" text-anchor="middle" font-family="Consolas, monospace" font-size="12.100000000000001" font-weight="700" fill="#FFD34E">70</text>
+  <rect x="110" y="96" width="150" height="16" rx="8" fill="#e9eef6" stroke="#c3cddb"/>
+  <ellipse cx="180" cy="96" rx="72" ry="12" fill="#f4f7fb" stroke="#b9c4d4"/>
+  <ellipse cx="165" cy="88" rx="18" ry="11" fill="#ff6b6b"/><ellipse cx="192" cy="90" rx="15" ry="9" fill="#ffa94d"/>
+  <ellipse cx="150" cy="92" rx="12" ry="8" fill="#69db7c"/>
+
+  <g>
+    <rect x="0" y="270" width="400" height="30" fill="#0866ff"/>
+    <text x="200" y="290" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#fff">Cân tính giá bán hàng</text>
+  </g>
+</svg>

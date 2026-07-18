@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Cân xách tay / cầm tay mini">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eaf1ff"/><stop offset="1" stop-color="#dbe7ff"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f7fb"/><stop offset="1" stop-color="#c9d3e0"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3b8bff"/><stop offset="1" stop-color="#0866ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <ellipse cx="200" cy="252" rx="150" ry="20" fill="#0a3f8f" opacity="0.10"/>
+  
+  <rect x="170" y="70" width="60" height="70" rx="10" fill="url(#blue)"/>
+  <rect x="180" y="82" width="40" height="26" rx="4" fill="#0d1830"/>
+    <text x="200" y="101" text-anchor="middle" font-family="Consolas, monospace" font-size="14.3" font-weight="700" fill="#7CFC5A">18.5</text>
+  <rect x="188" y="55" width="24" height="18" rx="9" fill="none" stroke="#4a5568" stroke-width="6"/>
+  <path d="M200 140 v18" stroke="#4a5568" stroke-width="4"/>
+  <path d="M188 158 q12 -10 24 0" stroke="#4a5568" stroke-width="4" fill="none"/>
+  <path d="M175 168 q25 60 50 0 q-8 -14 -25 -14 q-17 0 -25 14 z" fill="#c98b3a"/>
+  <path d="M175 168 q25 20 50 0" fill="none" stroke="#a5702a" stroke-width="2"/>
+
+  <g>
+    <rect x="0" y="270" width="400" height="30" fill="#0866ff"/>
+    <text x="200" y="290" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#fff">Cân xách tay / cầm tay mini</text>
+  </g>
+</svg>

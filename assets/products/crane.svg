@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Cân treo điện tử (chống nước)">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eaf1ff"/><stop offset="1" stop-color="#dbe7ff"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f7fb"/><stop offset="1" stop-color="#c9d3e0"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3b8bff"/><stop offset="1" stop-color="#0866ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <ellipse cx="200" cy="252" rx="150" ry="20" fill="#0a3f8f" opacity="0.10"/>
+  
+  <path d="M70 60 h260" stroke="#6b7688" stroke-width="6"/>
+  <path d="M200 60 v14" stroke="#4a5568" stroke-width="5"/>
+  <rect x="184" y="72" width="32" height="16" rx="8" fill="none" stroke="#4a5568" stroke-width="6"/>
+  <rect x="150" y="90" width="100" height="58" rx="10" fill="url(#metal)" stroke="#9fb0c6"/>
+  <rect x="162" y="102" width="76" height="34" rx="4" fill="#0d1830"/>
+    <text x="200" y="125" text-anchor="middle" font-family="Consolas, monospace" font-size="18.700000000000003" font-weight="700" fill="#FF5A5A">1000</text>
+  <path d="M200 148 v16" stroke="#4a5568" stroke-width="5"/>
+  <path d="M200 164 q-14 6 -6 20 q6 10 14 2" fill="none" stroke="#3a4658" stroke-width="6"/>
+  <rect x="150" y="196" width="100" height="46" rx="4" fill="#3b8bff"/>
+  <path d="M170 196 l30 -14 l30 14" fill="none" stroke="#2c6fd6" stroke-width="4"/>
+  <text x="200" y="224" text-anchor="middle" font-family="Segoe UI, Arial" font-size="12" font-weight="700" fill="#fff">INOX 304</text>
+
+  <g>
+    <rect x="0" y="270" width="400" height="30" fill="#0866ff"/>
+    <text x="200" y="290" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#fff">Cân treo điện tử (chống nước)</text>
+  </g>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Cân sức khỏe điện tử">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eaf1ff"/><stop offset="1" stop-color="#dbe7ff"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f7fb"/><stop offset="1" stop-color="#c9d3e0"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3b8bff"/><stop offset="1" stop-color="#0866ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <ellipse cx="200" cy="252" rx="150" ry="20" fill="#0a3f8f" opacity="0.10"/>
+  
+  <rect x="118" y="150" width="164" height="70" rx="14" fill="url(#metal)" stroke="#a9b6c8"/>
+  <rect x="126" y="158" width="148" height="54" rx="10" fill="#eaf1ff" opacity="0.85"/>
+  <rect x="170" y="176" width="60" height="26" rx="5" fill="#1c2b46"/>
+  <rect x="176" y="180" width="48" height="18" rx="4" fill="#0d1830"/>
+    <text x="200" y="195" text-anchor="middle" font-family="Consolas, monospace" font-size="9.9" font-weight="700" fill="#7CFC5A">62.4</text>
+  <circle cx="140" cy="164" r="4" fill="#0866ff"/>
+
+  <g>
+    <rect x="0" y="270" width="400" height="30" fill="#0866ff"/>
+    <text x="200" y="290" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#fff">Cân sức khỏe điện tử</text>
+  </g>
+</svg>

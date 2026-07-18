@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Cân sàn điện tử">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eaf1ff"/><stop offset="1" stop-color="#dbe7ff"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f7fb"/><stop offset="1" stop-color="#c9d3e0"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3b8bff"/><stop offset="1" stop-color="#0866ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <ellipse cx="200" cy="252" rx="150" ry="20" fill="#0a3f8f" opacity="0.10"/>
+  
+  <polygon points="70,214 250,214 285,240 105,240" fill="#b7c2d2"/>
+  <polygon points="70,206 250,206 250,214 70,214" fill="url(#metal)" stroke="#9fb0c6"/>
+  <rect x="120" y="150" width="80" height="56" fill="#d7a55a"/>
+  <rect x="120" y="150" width="80" height="10" fill="#c2913f"/>
+  <path d="M120 150 h80 M160 150 v56" stroke="#a5702a" stroke-width="2"/>
+  <rect x="288" y="120" width="12" height="94" fill="#8894a6"/>
+  <rect x="266" y="96" width="66" height="42" rx="6" fill="#1c2b46"/>
+  <rect x="272" y="103" width="54" height="28" rx="4" fill="#0d1830"/>
+    <text x="299" y="123" text-anchor="middle" font-family="Consolas, monospace" font-size="15.400000000000002" font-weight="700" fill="#7CFC5A">512</text>
+
+  <g>
+    <rect x="0" y="270" width="400" height="30" fill="#0866ff"/>
+    <text x="200" y="290" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#fff">Cân sàn điện tử</text>
+  </g>
+</svg>

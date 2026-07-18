@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Cân bàn điện tử">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eaf1ff"/><stop offset="1" stop-color="#dbe7ff"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f7fb"/><stop offset="1" stop-color="#c9d3e0"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3b8bff"/><stop offset="1" stop-color="#0866ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <ellipse cx="200" cy="252" rx="150" ry="20" fill="#0a3f8f" opacity="0.10"/>
+  
+  <rect x="70" y="180" width="160" height="26" rx="4" fill="url(#metal)" stroke="#9fb0c6"/>
+  <rect x="70" y="168" width="160" height="14" rx="3" fill="#eef2f8" stroke="#c3cddb"/>
+  <rect x="90" y="206" width="14" height="26" fill="#8894a6"/><rect x="196" y="206" width="14" height="26" fill="#8894a6"/>
+  <rect x="260" y="120" width="14" height="112" fill="#8894a6"/>
+  <rect x="238" y="96" width="70" height="46" rx="6" fill="#1c2b46"/>
+  <rect x="246" y="104" width="54" height="30" rx="4" fill="#0d1830"/>
+    <text x="273" y="125" text-anchor="middle" font-family="Consolas, monospace" font-size="16.5" font-weight="700" fill="#7CFC5A">48.6</text>
+  <rect x="150" y="150" width="40" height="20" rx="3" fill="#f0b429"/>
+
+  <g>
+    <rect x="0" y="270" width="400" height="30" fill="#0866ff"/>
+    <text x="200" y="290" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#fff">Cân bàn điện tử</text>
+  </g>
+</svg>
