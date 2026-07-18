@@ -6,12 +6,12 @@
 // loại vào một trong các NHÓM cân của cửa hàng dựa trên hiểu biết chung về
 // hình dạng từng loại cân — rồi map sang sản phẩm cùng loại để tư vấn.
 //
-// Dùng model vision riêng (gpt-4.1) cho bước này; phần chat chữ vẫn chạy
-// gpt-4o-mini cho rẻ. Ảnh KHÔNG giữ trong history — chỉ kết quả (một dòng
-// chữ) được đưa vào, để các lượt sau không bị tính tiền ảnh lặp lại.
+// Dùng chính Gemini 2.5 Flash (đa phương thức, nhìn ảnh tốt & rẻ). Ảnh KHÔNG
+// giữ trong history — chỉ kết quả (một dòng chữ) được đưa vào, để các lượt sau
+// không phải gửi lại ảnh.
 // ─────────────────────────────────────────────────────────────
 
-const VISION_MODEL = 'gpt-4.1';
+const VISION_MODEL = 'gemini-2.5-flash';
 
 // Dưới ngưỡng này bot KHÔNG khẳng định loại cân mà hỏi lại / chuyển kỹ thuật.
 export const CONFIDENCE_MIN = 0.7;
@@ -40,20 +40,20 @@ const CATEGORY_VISUALS = {
     'Cân ô tô / trạm cân xe tải: sàn cân RẤT LỚN bằng bê tông/thép ngoài trời để cả chiếc xe tải chạy lên, có nhà cân/phòng điều khiển bên cạnh. Quy mô công trình.',
 };
 
+// Schema định dạng Gemini (type IN HOA, không có additionalProperties).
 const RESULT_SCHEMA = {
-  type: 'object',
-  additionalProperties: false,
+  type: 'OBJECT',
   properties: {
     category: {
-      type: 'string',
+      type: 'STRING',
       description: 'id nhóm cân khớp nhất, hoặc "unknown" nếu không rõ / không phải cái cân.',
     },
     confidence: {
-      type: 'number',
+      type: 'NUMBER',
       description: 'Độ tự tin 0..1. Chỉ >= 0.8 khi ảnh rõ ràng là loại cân đó.',
     },
     reason: {
-      type: 'string',
+      type: 'STRING',
       description: 'Một câu ngắn nêu chi tiết thị giác đã dựa vào (tiếng Việt).',
     },
   },
@@ -76,37 +76,54 @@ Nguyên tắc:
 - Nếu ảnh mờ, không phải cái cân, hoặc là loại cân lạ không thuộc danh sách → category "unknown", confidence thấp. THÀ NHẬN KHÔNG CHẮC CÒN HƠN ĐOÁN SAI: tư vấn nhầm loại cân cho khách là lỗi nặng hơn việc hỏi lại.`;
 }
 
+// Tách mimeType + dữ liệu base64 từ data URL (parse kỹ thuật thuần, không regex).
+function splitDataUrl(dataUrl) {
+  if (typeof dataUrl !== 'string' || !dataUrl.startsWith('data:')) return null;
+  const comma = dataUrl.indexOf(',');
+  if (comma < 0) return null;
+  const header = dataUrl.slice(5, comma); // vd "image/jpeg;base64"
+  const mimeType = header.split(';')[0] || 'image/jpeg';
+  return { mimeType, data: dataUrl.slice(comma + 1) };
+}
+
 // Trả { category, confidence, reason }. category có thể là 'unknown'.
 export async function identifyScale(apiKey, imageDataUrl, categories) {
-  const res = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-    body: JSON.stringify({
-      model: VISION_MODEL,
-      temperature: 0,
-      messages: [
-        { role: 'system', content: buildPrompt(categories) },
-        {
-          role: 'user',
-          content: [
-            { type: 'text', text: 'Ảnh chiếc cân khách vừa gửi. Đây là loại cân nào?' },
-            { type: 'image_url', image_url: { url: imageDataUrl, detail: 'high' } },
-          ],
-        },
-      ],
-      response_format: {
-        type: 'json_schema',
-        json_schema: { name: 'scale_match', strict: true, schema: RESULT_SCHEMA },
-      },
-    }),
-  });
+  const img = splitDataUrl(imageDataUrl);
+  if (!img) return { category: 'unknown', confidence: 0, reason: 'Ảnh không hợp lệ.' };
 
-  if (!res.ok) throw new Error(`OpenAI vision ${res.status}: ${await res.text()}`);
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${VISION_MODEL}:generateContent?key=${apiKey}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: buildPrompt(categories) }] },
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              { text: 'Ảnh chiếc cân khách vừa gửi. Đây là loại cân nào?' },
+              { inlineData: { mimeType: img.mimeType, data: img.data } },
+            ],
+          },
+        ],
+        generationConfig: {
+          temperature: 0,
+          responseMimeType: 'application/json',
+          responseSchema: RESULT_SCHEMA,
+        },
+      }),
+    }
+  );
+
+  if (!res.ok) throw new Error(`Gemini vision ${res.status}: ${await res.text()}`);
   const data = await res.json();
+  const text = (((data.candidates || [])[0] || {}).content?.parts || [])
+    .filter((p) => p.text).map((p) => p.text).join('') || '{}';
 
   let out = { category: 'unknown', confidence: 0, reason: '' };
   try {
-    out = { ...out, ...JSON.parse(data.choices[0].message.content || '{}') };
+    out = { ...out, ...JSON.parse(text) };
   } catch {}
 
   // Model có thể bịa category lạ — chỉ chấp nhận id có thật.

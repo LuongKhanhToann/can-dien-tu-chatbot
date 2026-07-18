@@ -200,8 +200,8 @@ export function createQuote({ product_id, quantity = 1, customer_name, phone, no
   };
 }
 
-// ── LLM (OpenAI gpt-4o-mini) ────────────────────────────────────
-const MODEL = 'gpt-4o-mini';
+// ── LLM (Google Gemini 2.5 Flash) ───────────────────────────────
+const MODEL = 'gemini-2.5-flash';
 
 export function escalateToHuman({ reason, question }) {
   return { escalated: true, reason: reason || 'Bot chưa đủ chắc để trả lời.', question: question || '' };
@@ -263,13 +263,52 @@ function runTool(name, args) {
   return { error: 'unknown tool' };
 }
 
-async function callOpenAI(apiKey, messages) {
-  const res = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-    body: JSON.stringify({ model: MODEL, messages, tools: TOOLS, tool_choice: 'auto', temperature: 0.5 }),
-  });
-  if (!res.ok) throw new Error(`OpenAI ${res.status}: ${await res.text()}`);
+// Chuyển JSON-schema kiểu OpenAI (type thường, có default/additionalProperties)
+// sang Schema mà Gemini chấp nhận: type IN HOA, bỏ các khoá không hỗ trợ.
+export function toGeminiSchema(s) {
+  if (!s || typeof s !== 'object') return s;
+  const out = {};
+  if (s.type) out.type = String(s.type).toUpperCase();
+  if (s.description) out.description = s.description;
+  if (s.enum) out.enum = s.enum;
+  if (s.format) out.format = s.format;
+  if (s.items) out.items = toGeminiSchema(s.items);
+  if (s.properties) {
+    out.properties = {};
+    for (const [k, v] of Object.entries(s.properties)) out.properties[k] = toGeminiSchema(v);
+  }
+  if (Array.isArray(s.required) && s.required.length) out.required = s.required;
+  return out;
+}
+
+// Khai báo tool cho Gemini: gom function declarations, chuyển schema tham số.
+const GEMINI_TOOLS = [
+  {
+    functionDeclarations: TOOLS.map((t) => ({
+      name: t.function.name,
+      description: t.function.description,
+      parameters: toGeminiSchema(t.function.parameters),
+    })),
+  },
+];
+
+// Gọi Gemini generateContent. systemText = chỉ dẫn hệ thống, contents = hội thoại
+// theo định dạng Gemini ({ role: 'user'|'model', parts: [...] }).
+async function callGemini(apiKey, systemText, contents, useTools = true) {
+  const body = {
+    systemInstruction: { parts: [{ text: systemText }] },
+    contents,
+    generationConfig: { temperature: 0.5 },
+  };
+  if (useTools) {
+    body.tools = GEMINI_TOOLS;
+    body.toolConfig = { functionCallingConfig: { mode: 'AUTO' } };
+  }
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${apiKey}`,
+    { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
+  );
+  if (!res.ok) throw new Error(`Gemini ${res.status}: ${await res.text()}`);
   return res.json();
 }
 
@@ -301,13 +340,13 @@ async function describeGuestImage(apiKey, image, lastText) {
   };
 }
 
-// Chạy agent loop, trả { reply, cards, order, handoff, vision }.
+function partsText(parts) {
+  return (parts || []).filter((p) => p.text).map((p) => p.text).join('').trim();
+}
+
+// Chạy agent loop (Gemini), trả { reply, cards, order, handoff, vision }.
 export async function runChat(apiKey, history, today, image) {
-  const messages = [
-    { role: 'system', content: SYSTEM_PROMPT },
-    { role: 'system', content: `Ngày hôm nay (tham chiếu): ${today}.` },
-    ...history.slice(-16),
-  ];
+  let systemText = `${SYSTEM_PROMPT}\n\nNgày hôm nay (tham chiếu): ${today}.`;
   const cards = [];
   let order = null;
   let handoff = null;
@@ -316,38 +355,59 @@ export async function runChat(apiKey, history, today, image) {
   if (image) {
     const lastText = [...history].reverse().find((m) => m.role === 'user')?.content || '';
     const seen = await describeGuestImage(apiKey, image, lastText);
-    messages.push({ role: 'system', content: seen.note });
+    // Gemini chỉ có 1 systemInstruction — đưa kết quả nhận diện ảnh vào đó.
+    systemText += `\n\n[Hệ thống vừa nhận diện ảnh khách gửi] ${seen.note}`;
     handoff = seen.handoff;
     vision = seen.vision;
   }
 
   const lastUserText = [...history].reverse().find((m) => m.role === 'user')?.content || '';
 
+  // Chuyển history sang định dạng Gemini: role 'user'|'model', parts:[{text}].
+  const contents = history.slice(-16).map((m) => ({
+    role: m.role === 'assistant' ? 'model' : 'user',
+    parts: [{ text: m.content || '' }],
+  }));
+
   for (let step = 0; step < 4; step++) {
-    const data = await callOpenAI(apiKey, messages);
-    const msg = data.choices[0].message;
-    messages.push(msg);
-    if (!msg.tool_calls || msg.tool_calls.length === 0) {
-      return { reply: msg.content || '', cards, order, handoff, vision };
+    const data = await callGemini(apiKey, systemText, contents, true);
+    const cand = data.candidates && data.candidates[0];
+    const parts = (cand && cand.content && cand.content.parts) || [];
+    const calls = parts.filter((p) => p.functionCall).map((p) => p.functionCall);
+
+    if (!calls.length) {
+      return { reply: partsText(parts), cards, order, handoff, vision };
     }
-    for (const call of msg.tool_calls) {
-      let args = {};
-      try { args = JSON.parse(call.function.arguments || '{}'); } catch {}
-      const result = runTool(call.function.name, args);
-      if (call.function.name === 'find_products' && result.products) {
+
+    // Ghi lại lượt model (chứa functionCall), rồi gửi kết quả tool trở lại.
+    contents.push({ role: 'model', parts });
+    const responseParts = [];
+    for (const call of calls) {
+      const args = call.args || {};
+      const result = runTool(call.name, args);
+      if (call.name === 'find_products' && result.products) {
         for (const p of result.products) if (!cards.find((c) => c.id === p.id)) cards.push(p);
       }
-      if (call.function.name === 'get_product_details' && !result.error && !cards.find((c) => c.id === result.id)) {
+      if (call.name === 'get_product_details' && !result.error && !cards.find((c) => c.id === result.id)) {
         cards.push(result);
       }
-      if (call.function.name === 'create_quote' && (result.status === 'confirmed' || result.status === 'received')) order = result;
-      if (call.function.name === 'escalate_to_human') {
+      if (call.name === 'create_quote' && (result.status === 'confirmed' || result.status === 'received')) order = result;
+      if (call.name === 'escalate_to_human') {
         handoff = { reason: result.reason, confidence: null };
         await notifyAdmin({ reason: result.reason, guestMessage: args.question || lastUserText });
       }
-      messages.push({ role: 'tool', tool_call_id: call.id, content: JSON.stringify(result) });
+      responseParts.push({ functionResponse: { name: call.name, response: result } });
     }
+    contents.push({ role: 'user', parts: responseParts });
   }
-  const final = await callOpenAI(apiKey, [...messages, { role: 'system', content: 'Trả lời khách bằng văn bản, không gọi thêm tool.' }]);
-  return { reply: final.choices[0].message.content || 'Em cần thêm chút thông tin ạ.', cards, order, handoff, vision };
+
+  // Hết vòng tool mà chưa có câu trả lời → ép Gemini chốt bằng văn bản.
+  const final = await callGemini(
+    apiKey,
+    `${systemText}\n\nBây giờ hãy trả lời khách bằng văn bản, KHÔNG gọi thêm tool.`,
+    contents,
+    false
+  );
+  const fparts = (final.candidates && final.candidates[0] && final.candidates[0].content && final.candidates[0].content.parts) || [];
+  return { reply: partsText(fparts) || 'Em cần thêm chút thông tin ạ.', cards, order, handoff, vision };
 }

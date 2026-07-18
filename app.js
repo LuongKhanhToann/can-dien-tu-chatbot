@@ -59,8 +59,7 @@
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   }
   function pageAvatar() {
-    return el('div', 'avatar',
-      '<svg viewBox="0 0 48 48" width="16" height="16"><path d="M24 12 L32 29 H16 Z" fill="none" stroke="#fff" stroke-width="2.8" stroke-linejoin="round"/><rect x="11" y="29" width="26" height="4.5" rx="1.4" fill="#fff"/></svg>');
+    return el('div', 'avatar', '<span class="mono mono-xs">ĐT</span>');
   }
 
   function addMsg(role, contentNode) {

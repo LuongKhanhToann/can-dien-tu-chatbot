@@ -7,8 +7,8 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Chỉ nhận POST.' });
 
-  const key = process.env.OPENAI_API_KEY;
-  if (!key) return res.status(500).json({ error: 'Server chưa cấu hình OPENAI_API_KEY.' });
+  const key = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+  if (!key) return res.status(500).json({ error: 'Server chưa cấu hình GEMINI_API_KEY.' });
 
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body || {};

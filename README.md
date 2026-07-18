@@ -5,21 +5,21 @@ Chatbot bán hàng kiểu **fanpage Facebook / Messenger** cho doanh nghiệp **
 Live demo: xem phần Deployments (Vercel).
 
 ## Chức năng
-- Chat tư vấn bằng **gpt-4o-mini** (tool calling): tìm sản phẩm phù hợp, xem chi tiết, tạo báo giá/đơn hàng, chuyển nhân viên khi không chắc.
-- **Gửi ảnh**: nhận diện loại cân trong ảnh (gpt-4.1 vision) → tư vấn mẫu tương đương + báo giá.
+- Chat tư vấn bằng **Google Gemini 2.5 Flash** (function calling): tìm sản phẩm phù hợp, xem chi tiết, tạo báo giá/đơn hàng, chuyển nhân viên khi không chắc.
+- **Gửi ảnh**: nhận diện loại cân trong ảnh (Gemini 2.5 Flash vision) → tư vấn mẫu tương đương + báo giá.
 - Tab **Sản phẩm** như gian hàng, lọc theo loại cân.
 - Giá sỉ tự động khi số lượng lớn; cân ô tô → tạo yêu cầu khảo sát.
 
 ## Kiến trúc
 - Frontend tĩnh: `index.html`, `styles.css`, `app.js`, `config.js`, `products-data.js`, ảnh SVG trong `assets/products/`.
-- Serverless trên **Vercel** (region US — để gọi OpenAI không bị chặn IP Việt Nam):
+- Serverless trên **Vercel** (region US):
   - `api/chat.js` → hội thoại. `api/products.js` → danh mục.
   - Logic dùng chung: `api/_lib/scales.js` (danh mục + tool), `api/_lib/vision.js` (nhận diện ảnh), `api/_lib/notify.js` (báo nhân viên).
 - Frontend gọi `/api/*` cùng origin (`config.js` `CHAT_ENDPOINT=''`).
 
 ## Cấu hình
 Đặt biến môi trường trên Vercel:
-- `OPENAI_API_KEY` (bắt buộc)
+- `GEMINI_API_KEY` (bắt buộc — Google AI Studio key)
 - `ADMIN_WEBHOOK_URL` (tuỳ chọn — Telegram/Slack/Zalo OA nhận thông báo khi bot chuyển nhân viên)
 
 ## Chạy / deploy
